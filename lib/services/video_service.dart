@@ -18,6 +18,19 @@ class VideoService {
     return null;
   }
 
+  Future<void> uploadVideo(Video video) async {
+    if (_db == null) {
+      return;
+    }
+    try {
+      await _db.collection('videos').doc(video.id).set(video.toMap());
+
+      print('Video uploaded successfully');
+    } catch (e) {
+      print('Error uploading video: $e');
+    }
+  }
+
   // Fetch videos from Firestore or use mock data if Firebase is not setup
   Future<List<Video>> fetchVideos() async {
     if (_db != null) {
@@ -35,10 +48,10 @@ class VideoService {
 
     // Fallback to Mock Data
     print('Falling back to mock videos.');
-    return _getMockVideos();
+    return getMockVideos();
   }
 
-  List<Video> _getMockVideos() {
+  List<Video> getMockVideos() {
     return [
       Video(
         id: '1',
@@ -60,8 +73,7 @@ class VideoService {
       ),
       Video(
         id: '3',
-        url:
-            'https://www.w3schools.com/html/mov_bbb.mp4',
+        url: 'https://www.w3schools.com/html/mov_bbb.mp4',
         description: 'Big Buck Bunny! #animation #blender',
         likes: 890,
         username: '@funny_bunny',
@@ -69,8 +81,7 @@ class VideoService {
       ),
       Video(
         id: '4',
-        url:
-            'https://www.w3schools.com/html/movie.mp4',
+        url: 'https://www.w3schools.com/html/movie.mp4',
         description: 'Bear animation walking around #bear #wildlife',
         likes: 5600,
         username: '@bear_grylls',

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok_demo/firebase_options.dart';
 import 'screens/reels_screen.dart';
 import 'providers/reels_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
-    await Firebase.initializeApp();
-    print('Firebase initialized successfully.');
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    debugPrint('Firebase initialized successfully.');
   } catch (e) {
-    print('Failed to initialize Firebase (it might not be configured yet). Proceeding with mock data. Error: $e');
+    debugPrint(
+      'Failed to initialize Firebase (it might not be configured yet). Proceeding with mock data. Error: $e',
+    );
   }
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ReelsProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => ReelsProvider())],
       child: const MyApp(),
     ),
   );

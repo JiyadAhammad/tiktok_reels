@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "43216823113",
+    "project_id": "tiktok-reels-2c388",
+    "storage_bucket": "tiktok-reels-2c388.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:43216823113:android:c3f1657253df99a9127098",
+        "android_client_info": {
+          "package_name": "com.example.tiktok_demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdpm5MNyBSvHYWOjEbbc-nSHxeAw0rVeM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

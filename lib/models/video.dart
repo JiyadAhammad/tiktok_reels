@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class Video {
   final String id;
   final String url;
@@ -34,5 +35,23 @@ class Video {
       'username': username,
       'profilePic': profilePic,
     };
+  }
+
+  Video copyWith({
+    String? id,
+    String? url,
+    String? description,
+    int? likes,
+    String? username,
+    String? profilePic,
+  }) {
+    return Video(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      description: description ?? this.description,
+      likes: likes ?? this.likes,
+      username: username ?? this.username,
+      profilePic: profilePic ?? this.profilePic,
+    );
   }
 }

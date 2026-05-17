@@ -12,6 +12,13 @@ class ReelsProvider extends ChangeNotifier {
     loadVideos();
   }
 
+  Future<void> uploadVideo() async {
+    for (var item in _videoService.getMockVideos()) {
+      item = item.copyWith(id: "${DateTime.now().millisecondsSinceEpoch}");
+      await _videoService.uploadVideo(item);
+    }
+  }
+
   Future<void> loadVideos() async {
     isLoading = true;
     notifyListeners();
