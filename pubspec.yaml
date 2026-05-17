@@ -38,6 +38,9 @@ dependencies:
   cloud_firestore: any
   cached_video_player_plus: any
   video_player: any
+  preload_page_view: ^0.2.0
+  cached_network_image: ^3.4.1
+  provider: any
 
 dev_dependencies:
   flutter_test:
