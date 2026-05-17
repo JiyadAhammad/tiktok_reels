@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
-import 'package:video_player/video_player.dart';
 import '../models/video.dart';
 import '../services/video_service.dart';
 import '../widgets/video_player_item.dart';
 
 class ReelsScreen extends StatefulWidget {
+  const ReelsScreen({super.key});
+
   @override
-  _ReelsScreenState createState() => _ReelsScreenState();
+  ReelsScreenState createState() => ReelsScreenState();
 }
 
-class _ReelsScreenState extends State<ReelsScreen> {
+class ReelsScreenState extends State<ReelsScreen> {
   final VideoService _videoService = VideoService();
   List<Video> _videos = [];
   bool _isLoading = true;
   int _currentIndex = 0;
-  
+
   // Cache of players
   final Map<int, CachedVideoPlayerPlus> _players = {};
 
@@ -31,7 +32,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
       _videos = videos;
       _isLoading = false;
     });
-    
+
     if (_videos.isNotEmpty) {
       _preloadVideos(0); // preload the first few videos
     }
@@ -40,14 +41,14 @@ class _ReelsScreenState extends State<ReelsScreen> {
   void _preloadVideos(int currentIndex) {
     // We want to preload the current video and the next 3 videos
     final int preloadCount = 3;
-    
+
     for (int i = 0; i <= preloadCount; i++) {
       final indexToLoad = currentIndex + i;
       if (indexToLoad < _videos.length) {
         _initializePlayer(indexToLoad);
       }
     }
-    
+
     // Dispose players that are far behind or far ahead to save memory
     final List<int> keysToRemove = [];
     _players.forEach((index, player) {
@@ -56,18 +57,22 @@ class _ReelsScreenState extends State<ReelsScreen> {
         keysToRemove.add(index);
       }
     });
-    
+
     for (var key in keysToRemove) {
       _players.remove(key);
     }
   }
 
   Future<void> _initializePlayer(int index) async {
-    if (_players.containsKey(index)) return; // Already initialized or initializing
-    
-    final player = CachedVideoPlayerPlus.networkUrl(Uri.parse(_videos[index].url));
+    if (_players.containsKey(index)) {
+      return; // Already initialized or initializing
+    }
+
+    final player = CachedVideoPlayerPlus.networkUrl(
+      Uri.parse(_videos[index].url),
+    );
     _players[index] = player;
-    
+
     try {
       await player.initialize();
       player.controller.setLooping(true);
@@ -85,7 +90,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
     setState(() {
       _currentIndex = index;
     });
-    
+
     // Pause all and play the current one
     _players.forEach((idx, player) {
       if (idx == index) {
@@ -96,7 +101,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
         player.controller.seekTo(Duration.zero);
       }
     });
-    
+
     // Preload next batch
     _preloadVideos(index);
   }
@@ -123,7 +128,10 @@ class _ReelsScreenState extends State<ReelsScreen> {
       return Scaffold(
         backgroundColor: Colors.black,
         body: Center(
-          child: Text('No videos available', style: TextStyle(color: Colors.white)),
+          child: Text(
+            'No videos available',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       );
     }
@@ -137,7 +145,7 @@ class _ReelsScreenState extends State<ReelsScreen> {
         itemBuilder: (context, index) {
           final video = _videos[index];
           final player = _players[index];
-          
+
           return VideoPlayerItem(
             video: video,
             player: player,

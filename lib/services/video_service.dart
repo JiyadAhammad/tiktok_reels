@@ -22,15 +22,17 @@ class VideoService {
   Future<List<Video>> fetchVideos() async {
     if (_db != null) {
       try {
-        final snapshot = await _db!.collection('videos').get();
+        final snapshot = await _db.collection('videos').get();
         if (snapshot.docs.isNotEmpty) {
-          return snapshot.docs.map((doc) => Video.fromMap(doc.data(), doc.id)).toList();
+          return snapshot.docs
+              .map((doc) => Video.fromMap(doc.data(), doc.id))
+              .toList();
         }
       } catch (e) {
         print('Error fetching from Firestore: $e');
       }
     }
-    
+
     // Fallback to Mock Data
     print('Falling back to mock videos.');
     return _getMockVideos();
@@ -40,42 +42,47 @@ class VideoService {
     return [
       Video(
         id: '1',
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-        description: 'Beautiful blazing fire #fire #nature',
+        url:
+            'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+        description: 'Beautiful butterfly in nature #nature #butterfly',
         likes: 1200,
-        username: '@fire_lover',
+        username: '@nature_lover',
         profilePic: 'https://picsum.photos/200',
       ),
       Video(
         id: '2',
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-        description: 'The great escape! #adventure #travel',
+        url:
+            'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+        description: 'Busy bee collecting pollen #bee #flowers',
         likes: 3450,
-        username: '@traveler_joe',
+        username: '@insect_world',
         profilePic: 'https://picsum.photos/201',
       ),
       Video(
         id: '3',
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-        description: 'Having some fun! #fun #smile',
+        url:
+            'https://www.w3schools.com/html/mov_bbb.mp4',
+        description: 'Big Buck Bunny! #animation #blender',
         likes: 890,
-        username: '@funny_guy',
+        username: '@funny_bunny',
         profilePic: 'https://picsum.photos/202',
       ),
       Video(
         id: '4',
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-        description: 'Joyride across the country #cars #roadtrip',
+        url:
+            'https://www.w3schools.com/html/movie.mp4',
+        description: 'Bear animation walking around #bear #wildlife',
         likes: 5600,
-        username: '@car_enthusiast',
+        username: '@bear_grylls',
         profilePic: 'https://picsum.photos/203',
       ),
       Video(
         id: '5',
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-        description: 'Wait for it... #funny #lol',
+        url:
+            'https://raw.githubusercontent.com/mdn/learning-area/master/html/multimedia-and-embedding/video-and-audio-content/rabbit320.mp4',
+        description: 'Rabbit hopping! #rabbit #cute',
         likes: 15200,
-        username: '@meme_lord',
+        username: '@cute_animals',
         profilePic: 'https://picsum.photos/204',
       ),
     ];

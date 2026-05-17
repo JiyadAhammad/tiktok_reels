@@ -21,7 +21,7 @@ class VideoPlayerItem extends StatelessWidget {
       children: [
         // Video Player Background
         Positioned.fill(
-          child: _buildVideoPlayer(),
+          child: _VideoPlayer(player: player),
         ),
         
         // Right Side Actions (Likes, Profile, etc.)
@@ -31,13 +31,13 @@ class VideoPlayerItem extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildProfilePic(),
-              SizedBox(height: 20),
-              _buildActionIcon(Icons.favorite, video.likes.toString()),
-              SizedBox(height: 20),
-              _buildActionIcon(Icons.comment, '120'),
-              SizedBox(height: 20),
-              _buildActionIcon(Icons.share, 'Share'),
+              _ProfilePic(profilePic: video.profilePic),
+              const SizedBox(height: 20),
+              _ActionIcon(icon: Icons.favorite, label: video.likes.toString()),
+              const SizedBox(height: 20),
+              const _ActionIcon(icon: Icons.comment, label: '120'),
+              const SizedBox(height: 20),
+              const _ActionIcon(icon: Icons.share, label: 'Share'),
             ],
           ),
         ),
@@ -53,16 +53,16 @@ class VideoPlayerItem extends StatelessWidget {
             children: [
               Text(
                 video.username,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 video.description,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
                 ),
@@ -75,8 +75,15 @@ class VideoPlayerItem extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildVideoPlayer() {
+class _VideoPlayer extends StatelessWidget {
+  final CachedVideoPlayerPlus? player;
+
+  const _VideoPlayer({required this.player});
+
+  @override
+  Widget build(BuildContext context) {
     if (player == null || !player!.isInitialized) {
       return Container(
         color: Colors.black,
@@ -105,8 +112,15 @@ class VideoPlayerItem extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildProfilePic() {
+class _ProfilePic extends StatelessWidget {
+  final String profilePic;
+
+  const _ProfilePic({required this.profilePic});
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: 50,
       height: 50,
@@ -116,25 +130,36 @@ class VideoPlayerItem extends StatelessWidget {
         border: Border.all(color: Colors.white, width: 2),
       ),
       child: ClipOval(
-        child: video.profilePic.isNotEmpty
+        child: profilePic.isNotEmpty
             ? Image.network(
-                video.profilePic,
+                profilePic,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Icon(Icons.person),
+                errorBuilder: (context, error, stackTrace) => const Icon(Icons.person),
               )
-            : Icon(Icons.person),
+            : const Icon(Icons.person),
       ),
     );
   }
+}
 
-  Widget _buildActionIcon(IconData icon, String label) {
+class _ActionIcon extends StatelessWidget {
+  final IconData icon;
+  final String label;
+
+  const _ActionIcon({
+    required this.icon,
+    required this.label,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Icon(icon, color: Colors.white, size: 36),
-        SizedBox(height: 4),
+        const SizedBox(height: 4),
         Text(
           label,
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ],
     );
