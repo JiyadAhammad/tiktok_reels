@@ -32,14 +32,27 @@ class VideoService {
   }
 
   // Fetch videos from Firestore or use mock data if Firebase is not setup
-  Future<List<Video>> fetchVideos() async {
+  Future<(List<Video>, DocumentSnapshot?)> fetchVideos({
+    DocumentSnapshot? lastDoc,
+    int limit = 5,
+  }) async {
     if (_db != null) {
       try {
-        final snapshot = await _db.collection('videos').get();
+        Query query = _db.collection('videos').limit(limit);
+        if (lastDoc != null) {
+          query = query.startAfterDocument(lastDoc);
+        }
+        final snapshot = await query.get();
         if (snapshot.docs.isNotEmpty) {
-          return snapshot.docs
-              .map((doc) => Video.fromMap(doc.data(), doc.id))
+          final videos = snapshot.docs
+              .map(
+                (doc) =>
+                    Video.fromMap(doc.data() as Map<String, dynamic>, doc.id),
+              )
               .toList();
+          return (videos, snapshot.docs.last);
+        } else {
+          return (<Video>[], lastDoc);
         }
       } catch (e) {
         print('Error fetching from Firestore: $e');
@@ -48,7 +61,7 @@ class VideoService {
 
     // Fallback to Mock Data
     print('Falling back to mock videos.');
-    return getMockVideos();
+    return (lastDoc == null ? getMockVideos() : <Video>[], null);
   }
 
   List<Video> getMockVideos() {

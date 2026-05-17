@@ -32,19 +32,47 @@ class ReelsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: PreloadPageView.builder(
-        scrollDirection: Axis.vertical,
-        preloadPagesCount: 3,
-        itemCount: provider.videos.length,
-        onPageChanged: (index) => context.read<ReelsProvider>().setPage(index),
-        itemBuilder: (context, index) {
-          final video = provider.videos[index];
+      body: Stack(
+        children: [
+          PreloadPageView.builder(
+            scrollDirection: Axis.vertical,
+            preloadPagesCount: 3,
+            itemCount: provider.videos.length + (provider.hasMore ? 1 : 0),
+            onPageChanged: (index) {
+              // If we reach the loading page, we still want to update the provider
+              context.read<ReelsProvider>().setPage(index);
+            },
+            itemBuilder: (context, index) {
+              if (index == provider.videos.length) {
+                return const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                );
+              }
 
-          return VideoPlayerItem(
-            video: video,
-            index: index,
-          );
-        },
+              final video = provider.videos[index];
+
+              return VideoPlayerItem(video: video, index: index);
+            },
+          ),
+          if (provider.isFetchingMore)
+            const Positioned(
+              bottom: 20,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: SafeArea(
+                  child: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
